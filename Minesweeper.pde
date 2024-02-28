@@ -1,11 +1,9 @@
 import de.bezier.guido.*;
-//Declare and initialize constants NUM_ROWS and NUM_COLS = 20
-public static final int NUM_ROWS=20;
-public static final int NUM_COLS = 20;
-
+public final static int NUM_ROWS=5;
+public final static int NUM_COLS=5;
 private MSButton[][] buttons; //2d array of minesweeper buttons
-private ArrayList <MSButton> mines; //ArrayList of just the minesweeper buttons that are mined
-buttons = new MSButton[NUM_ROWS][NUM_COLS];
+private ArrayList <MSButton> mines= new ArrayList<MSButton>(); //ArrayList of just the minesweeper buttons that are mined
+
 void setup ()
 {
     size(400, 400);
@@ -13,22 +11,22 @@ void setup ()
     
     // make the manager
     Interactive.make( this );
-    //first call to new
-    //this initializes the empty aparment buidlings
-    //across all the floors
-  buttons = new MSButton[NUM_ROWS][NUM_COLS];
+      buttons = new  MSButton[20][20];
+     for (int r = 0; r < 20; r++)
+    for (int c = 0; c < 20; c++)
+      buttons[r][c] = new MSButton(r, c);
     //your code to initialize buttons goes here
-    for(int r=0;r<NUM_ROWS;r++){
-    for(int c=0;c<NUM_COLS;c++){
-     buttons[0][c]=new MSButton(r,c); 
-    }
-    }
+    
+    
     
     setMines();
 }
 public void setMines()
 {
-    //your code
+  int r=(int)(Math.random()*5);
+  int c=(int)(Math.random()*5);
+  if(mines.contains(buttons[r][c]))
+  setMines();
 }
 
 public void draw ()
@@ -91,8 +89,8 @@ public class MSButton
     {    
         if (flagged)
             fill(0);
-        // else if( clicked && mines.contains(this) ) 
-        //     fill(255,0,0);
+         else if( clicked && mines.contains(this) ) 
+             fill(255,0,0);
         else if(clicked)
             fill( 200 );
         else 
