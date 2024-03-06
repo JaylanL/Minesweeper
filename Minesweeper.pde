@@ -11,9 +11,9 @@ void setup ()
     
     // make the manager
     Interactive.make( this );
-      buttons = new  MSButton[20][20];
-     for (int r = 0; r < 20; r++)
-    for (int c = 0; c < 20; c++)
+      buttons = new  MSButton[NUM_ROWS][NUM_COLS];
+     for (int r = 0; r < NUM_ROWS; r++)
+    for (int c = 0; c < NUM_COLS; c++)
       buttons[r][c] = new MSButton(r, c);
     //your code to initialize buttons goes here
     
@@ -23,10 +23,11 @@ void setup ()
 }
 public void setMines()
 {
-  int r=(int)(Math.random()*5);
-  int c=(int)(Math.random()*5);
-  if(mines.contains(buttons[r][c]))
-  setMines();
+  int rOW=(int)(Math.random()*NUM_ROWS);
+  int cOL=(int)(Math.random()*NUM_COLS);
+  if(!mines.contains(buttons[rOW][cOL])){
+  mines.add(buttons[rOW][cOL]);
+  }
 }
 
 public void draw ()
@@ -37,12 +38,15 @@ public void draw ()
 }
 public boolean isWon()
 {
-    //your code here
-    return false;
+    for(int r=0;r<NUM_ROWS;r++)
+     for(int c=0;c<NUM_COLS;c++)
+       if(!buttons[r][c].isFlagged()&&!buttons[r][c].isFlagged())
+        return false;
+    return true;
 }
 public void displayLosingMessage()
 {
-    //your code here
+  
 }
 public void displayWinningMessage()
 {
@@ -90,7 +94,31 @@ public class MSButton
     public void mousePressed () 
     {
         clicked = true;
-        if()
+        if(keyPressed && keyCode == 16){
+            flagged = !flagged;
+            if(!flagged) clicked = false;
+        } else if(mines.contains(this)){
+            displayLosingMessage();
+        } else if(countMines(myRow,myCol) > 0){
+           myLabel = "" + countMines(myRow,myCol);
+        } else {
+            if(isValid(myRow,myCol+1) && !buttons[myRow][myCol+1].flagged) 
+                buttons[myRow][myCol+1].mousePressed();
+            if(isValid(myRow+1,myCol+1) && !buttons[myRow+1][myCol+1].flagged) 
+                buttons[myRow+1][myCol+1].mousePressed();
+            if(isValid(myRow-1,myCol+1)  && !buttons[myRow-1][myCol+1].flagged) 
+                buttons[myRow-1][myCol+1].mousePressed();
+            if(isValid(myRow,myCol-1) && !buttons[myRow][myCol-1].flagged) 
+                buttons[myRow][myCol-1].mousePressed();
+            if(isValid(myRow+1,myCol-1) && !buttons[myRow+1][myCol-1].flagged) 
+                buttons[myRow+1][myCol-1].mousePressed();
+            if(isValid(myRow-1,myCol-1) && !buttons[myRow-1][myCol-1].flagged) 
+                buttons[myRow-1][myCol-1].mousePressed();
+            if(isValid(myRow+1,myCol) && !buttons[myRow+1][myCol].flagged) 
+                buttons[myRow+1][myCol].mousePressed();
+            if(isValid(myRow-1,myCol) && !buttons[myRow-1][myCol].clicked) 
+                buttons[myRow-1][myCol].mousePressed();
+        }
     }
     public void draw () 
     {    
