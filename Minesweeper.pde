@@ -18,7 +18,7 @@ void setup ()
     //your code to initialize buttons goes here
     
     
-    
+    for(int i=0;i<13;i++)
     setMines();
 }
 public void setMines()
@@ -33,25 +33,55 @@ public void setMines()
 public void draw ()
 {
     background( 0 );
-    if(isWon() == true)
+    if(isWon())
         displayWinningMessage();
-    displayLosingMessage();
 }
 public boolean isWon()
 {
     for(int r=0;r<NUM_ROWS;r++)
      for(int c=0;c<NUM_COLS;c++)
-       if(!buttons[r][c].isFlagged()&&!buttons[r][c].isFlagged())
+       if(!buttons[r][c].isFlagged()&&!buttons[r][c].isClicked())
         return false;
     return true;
 }
 public void displayLosingMessage()
 {
-  
+  for (int r=0; r<NUM_ROWS; r++){
+    for (int c=0; c<NUM_COLS; c++){
+      if (mines.contains(buttons[r][c])&& !buttons[r][c].isClicked()){
+        buttons[r][c].flagged=false;
+        buttons[r][c].clicked=true;
+      }
+    }
+  }
+    buttons[9][6].setLabel("Y");
+    buttons[9][7].setLabel("O");
+    buttons[9][8].setLabel("U");
+    buttons[9][9].setLabel("");
+    buttons[9][10].setLabel("L");
+    buttons[9][11].setLabel("O");
+    buttons[9][12].setLabel("S");
+    buttons[9][13].setLabel("E");  
 }
 public void displayWinningMessage()
 {
-    //your code here
+    for(int i = mines.size()-1; i >= 0; i--){
+    mines.remove(i);
+  }    
+    for (int r=0; r<NUM_ROWS; r++){
+    for (int c=0; c<NUM_COLS; c++){ 
+        buttons[r][c].flagged=false;
+        buttons[r][c].clicked=true;
+        buttons[r][c].setLabel("");
+    }
+  }
+    buttons[9][6].setLabel("Y");
+    buttons[9][7].setLabel("O");
+    buttons[9][8].setLabel("U");
+    buttons[9][9].setLabel("");
+    buttons[9][10].setLabel("W");
+    buttons[9][11].setLabel("I");
+    buttons[9][12].setLabel("N");
 }
 public boolean isValid(int r, int c)
 {
@@ -94,7 +124,7 @@ public class MSButton
     // called by manager
     public void mousePressed () 
     {
-        clicked = true;
+         clicked = true;
         if(keyPressed && keyCode == 16){
             flagged = !flagged;
             if(!flagged) clicked = false;
@@ -103,21 +133,21 @@ public class MSButton
         } else if(countMines(myRow,myCol) > 0){
            myLabel = "" + countMines(myRow,myCol);
         } else {
-            if(isValid(myRow,myCol+1) && !buttons[myRow][myCol+1].flagged) 
+            if(isValid(myRow,myCol+1) && !buttons[myRow][myCol+1].clicked) 
                 buttons[myRow][myCol+1].mousePressed();
-            if(isValid(myRow+1,myCol+1) && !buttons[myRow+1][myCol+1].flagged) 
+            if(isValid(myRow+1,myCol+1) && !buttons[myRow+1][myCol+1].clicked) 
                 buttons[myRow+1][myCol+1].mousePressed();
-            if(isValid(myRow-1,myCol+1)  && !buttons[myRow-1][myCol+1].flagged) 
+            if(isValid(myRow-1,myCol+1)  && !buttons[myRow-1][myCol+1].clicked) 
                 buttons[myRow-1][myCol+1].mousePressed();
-            if(isValid(myRow,myCol-1) && !buttons[myRow][myCol-1].flagged) 
+            if(isValid(myRow,myCol-1) && !buttons[myRow][myCol-1].clicked) 
                 buttons[myRow][myCol-1].mousePressed();
-            if(isValid(myRow+1,myCol-1) && !buttons[myRow+1][myCol-1].flagged) 
+            if(isValid(myRow+1,myCol-1) && !buttons[myRow+1][myCol-1].clicked) 
                 buttons[myRow+1][myCol-1].mousePressed();
-            if(isValid(myRow-1,myCol-1) && !buttons[myRow-1][myCol-1].flagged) 
+            if(isValid(myRow-1,myCol-1) && !buttons[myRow-1][myCol-1].clicked) 
                 buttons[myRow-1][myCol-1].mousePressed();
-            if(isValid(myRow+1,myCol) && !buttons[myRow+1][myCol].flagged) 
+            if(isValid(myRow+1,myCol) && !buttons[myRow+1][myCol].clicked) 
                 buttons[myRow+1][myCol].mousePressed();
-            if(isValid(myRow-1,myCol) && !buttons[myRow-1][myCol].flagged) 
+            if(isValid(myRow-1,myCol) && !buttons[myRow-1][myCol].clicked) 
                 buttons[myRow-1][myCol].mousePressed();
         }
     }
@@ -147,5 +177,9 @@ public class MSButton
     public boolean isFlagged()
     {
         return flagged;
+    }
+    public boolean isClicked()
+    {
+     return clicked;
     }
 }
